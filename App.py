@@ -91,9 +91,9 @@ def listen_for_command():
     """
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Listening for command...")
         speak("How can I help you Ben?")
         r.adjust_for_ambient_noise(source, duration=0.5)
+        print("Listening for command...")
         try:
             audio = r.listen(source, timeout=5, phrase_time_limit=5)
             recognized_text = r.recognize_google(audio)
