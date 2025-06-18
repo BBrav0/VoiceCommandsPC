@@ -69,6 +69,8 @@ def do_ai_stuff(input_text):
 
 def check_commands(inp):
     match inp.lower().strip():
+        case "stop":
+            exit(0);
         case "shutdown":
             speak("Shutting down...")
             os.system("shutdown /s /t 1")
