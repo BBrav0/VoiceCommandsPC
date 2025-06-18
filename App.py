@@ -79,7 +79,7 @@ def check_commands(inp):
             exit(0)
         case "sleep":
             speak("Turning off the monitors...")
-            os.system("nircmd monitor off")
+            os.system('start /min cmd /c "timeout /t 4 & nircmd monitor off"')
             exit(0)
         case _:
             return False  # No command matched
