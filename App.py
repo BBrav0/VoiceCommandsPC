@@ -4,6 +4,7 @@ import subprocess
 import pyttsx3
 import google.generativeai as genai
 from dotenv import load_dotenv
+import keyboard  # For listening to keyboard events
 
 # Load environment variables
 load_dotenv()
@@ -24,6 +25,14 @@ engine.setProperty('voice', voices[1].id)
 # Set speech rate
 rate = engine.getProperty('rate')
 engine.setProperty('rate', rate * 1.2)
+
+# ---------------------------------------------------------------------------
+# Global escape-key listener
+# Pressing the ESC key anywhere while this script is running will immediately
+# terminate the program with exit code 0.
+# ---------------------------------------------------------------------------
+
+keyboard.on_press_key("esc", lambda _: os._exit(0))  # use os._exit to ensure the entire process exits from the callback
 
 # Initialize AI model
 try:
