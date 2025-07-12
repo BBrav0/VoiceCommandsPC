@@ -34,12 +34,13 @@ engine.setProperty('rate', rate * 1.2)
 
 keyboard.on_press_key("esc", lambda _: os._exit(0))  # use os._exit to ensure the entire process exits from the callback
 
-# Initialize AI model
-try:
-    model = genai.GenerativeModel("gemini-1.5-flash")
-except Exception as e:
-    print(f"Error initializing AI model: {e}")
-    exit(1)
+# ---------------------------------------------------------------------------
+# AI model (lazy initialization)
+# ---------------------------------------------------------------------------
+# The Gemini model takes noticeable time to load.  We defer this cost until we
+# actually need the model – i.e., after we've confirmed the user's input isn't
+# one of the direct system commands handled by `check_commands`.
+model = None  # Will be created on first use
 
 def speak(text):
     """
@@ -58,6 +59,15 @@ def do_ai_stuff(input_text):
     if check_commands(input_text.lower()):
         return  # Exit if a command was executed
     
+    # Lazy-load the AI model only when needed
+    global model
+    if model is None:
+        try:
+            model = genai.GenerativeModel("gemini-1.5-flash")
+        except Exception as e:
+            speak(f"Sorry, I couldn't initialize the AI model: {str(e)}")
+            return
+
     # If no direct command, ask AI to interpret
     try:
         response = model.generate_content(
